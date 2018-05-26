@@ -1,8 +1,8 @@
 ﻿namespace Test_2.Models
 {
-    class Elephant : Animal
+    class Elephant : Animals
     {
-        public Elephant ()
+        public Elephant()
         {
             name = "Слон";
             massa = 918;
