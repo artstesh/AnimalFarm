@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Test_2.Models
 {
-    class hare : Animal
+    class Hare : Animals
     {
-        public hare ()
+        public Hare()
         {
             name = "Заяц";
             massa = 16;

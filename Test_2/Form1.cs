@@ -6,38 +6,11 @@ using Test_2.Tools;
 
 namespace Test_2
 {
-    
+
     public partial class Form1 : Form
     {
-        private Animal[] _animals = new Animal[2];
-
-        private void Analize ()
-        {
-            if (cbOne.SelectedItem == null && cbUnit.SelectedItem == null || _animals.Any(e => e == null)) return;
-            var animals = _animals.OrderBy(e => e.massa).ToArray();
-            if (animals[0].massa == animals[1].massa)
-            {
-                tbAnalize.Text = "животные весят одинаково";
-                return;
-            }
-            tbAnalize.Text = animals[1].name + " весит больше, чем " + animals[0].name;
-        }
-
-        private void ChangeUnit1 ()
-        {
-            if (_animals[0] == null || cbUnit.SelectedItem == null) return;
-            _animals[0].unit = cbUnit.SelectedItem.ToString();
-            _animals[0].massaGen = MassConverter.ConvertKilo(_animals[0].massa, _animals[0].unit);
-            tbOne.Text = _animals[0].view();
-        }
-
-        private void ChangeUnit2 ()
-        {
-            if (_animals[1] == null || cbUnit.SelectedItem == null) return;
-            _animals[1].unit = cbUnit.SelectedItem.ToString();
-            _animals[1].massaGen = MassConverter.ConvertKilo(_animals[1].massa, _animals[1].unit);
-            tbTwo.Text = _animals[1].view();
-        }
+        private Animals viewAnOne;
+        private Animals viewAnTwo;
 
         public Form1()
         {
@@ -46,30 +19,45 @@ namespace Test_2
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            cbOne.Items.AddRange(AnimalFactory.GetAnimalNames());
-            cbTwo.Items.AddRange(AnimalFactory.GetAnimalNames());
-            cbUnit.Items.AddRange(new[] { "kg", "g", "lb", "st" });
-         }
+            cbOne.Items.AddRange(AnimalsFactory.ListNamesAnimals());
+            cbTwo.Items.AddRange(AnimalsFactory.ListNamesAnimals());
+            cbUnit.Items.AddRange(MassaAnimals.ListUnitMass());
+        }
 
         private void cbOne_SelectedIndexChanged(object sender, EventArgs e)
         {
-            _animals[0] = AnimalFactory.Create(cbOne.SelectedItem.ToString());
-            if (cbUnit.SelectedItem == null) tbOne.Text = "***Не выбраны единицы веса***";
-            Analize();
+            viewAnOne = AnimalsFactory.CreateAnimals(cbOne.SelectedItem.ToString());
+            tbOne.Text = MassaAnimals.MassaView(viewAnOne, cbUnit.SelectedItem);
+            if (cbUnit.SelectedItem != null) tbAnalize.Text = MassaAnimals.MassaCompare(viewAnOne, viewAnTwo);
         }
 
         private void cbTwo_SelectedIndexChanged(object sender, EventArgs e)
         {
-            _animals[1] = AnimalFactory.Create(cbTwo.SelectedItem.ToString());
-            if (cbUnit.SelectedItem == null) tbTwo.Text = "***Не выбраны единицы веса***";
-            Analize();            
+            viewAnTwo = AnimalsFactory.CreateAnimals(cbTwo.SelectedItem.ToString());
+            tbTwo.Text = MassaAnimals.MassaView(viewAnTwo, cbUnit.SelectedItem);
+            if (cbUnit.SelectedItem != null) tbAnalize.Text = MassaAnimals.MassaCompare(viewAnOne, viewAnTwo);
+        }
+
+        private void tbTwo_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void tbOne_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void tbAnalize_TextChanged(object sender, EventArgs e)
+        {
+
         }
 
         private void cbUnit_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ChangeUnit1();
-            ChangeUnit2();
-            Analize();
+            tbOne.Text = MassaAnimals.MassaView(viewAnOne, cbUnit.SelectedItem);
+            tbTwo.Text = MassaAnimals.MassaView(viewAnTwo, cbUnit.SelectedItem);
+            tbAnalize.Text = MassaAnimals.MassaCompare(viewAnOne, viewAnTwo);
         }
     }
 }
